@@ -38,4 +38,38 @@ int main() {
     }
     return 0;
 }
-/*下面是正常一点的解法*/
+/*下面是正常一点的解法，用dp记录剩余个数，因为bool转移耗费太大了*/
+#include <cstring>
+#include <cstdio>
+#define INF 0x3f3f3f3f
+#define MAXN 110
+#define MAXM 100010
+using namespace std;
+int F[MAXM], A[MAXN], C[MAXN];
+int n, m;
+int main()
+{
+    while (scanf("%d%d", &n,&m) && n) {
+        memset(F, -1, sizeof(F));
+        for (int i = 0; i != n; ++i)
+            scanf("%d", &A[i]);
+        for (int i = 0; i != n; ++i)
+            scanf("%d", &C[i]);
+        F[0] = 0;
+        for (int i = 0; i != n; ++i) {
+            for (int j = 0; j <= m; ++j) {
+                if (F[j] >= 0)
+                    F[j] = C[i];
+                else if (j >= A[i] && F[j - A[i]] > 0)
+                    F[j] = F[j - A[i]] - 1;
+                else
+                    F[j] = -1;
+            }
+        }
+        int cnt = 0;
+        for (int i = 1; i <= m; ++i)
+            cnt += (F[i] >= 0);
+        printf("%d\n", cnt);
+    }
+    return 0;
+}
