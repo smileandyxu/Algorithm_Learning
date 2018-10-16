@@ -73,3 +73,48 @@ int main()
     }
     return 0;
 }
+/*第二遍自己做，果然代码丑了不少，没必要二维的其实*/
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+#include <cstdio>
+#define INF 0x3f3f3f3f
+#define MAXM 100010
+#define MAXN 110
+using namespace std;
+
+int dp[2][MAXM];
+int A[MAXN], C[MAXN];
+int n, m;
+int main()
+{
+    while (scanf("%d%d", &n, &m) && n && m) {
+        for (int i = 0; i != n; ++i)
+            scanf("%d", &A[i]);
+        for (int i = 0; i != n; ++i)
+            scanf("%d", &C[i]);
+        memset(dp, -1, sizeof(dp));
+        for (int i = 0; i != n; ++i) {
+            int p = i & 1;
+            dp[p][0] = C[i];
+            for (int j = 1; j <= m; ++j) {
+                if (dp[p ^ 1][j] != -1)
+                    dp[p][j] = C[i];
+                else
+                    dp[p][j] = -1;
+                if (j >= A[i] && dp[p][j - A[i]] > 0)
+                    dp[p][j] = max(dp[p][j], dp[p][j - A[i]] - 1);
+                //cout << i << " " << j << " ==> " << dp[p][j] << endl;
+            }
+        }
+        int cnt = 0;
+        for (int j = 1; j <= m; ++j) {
+            if (dp[(n - 1) & 1][j] != -1)
+                ++cnt;
+        }
+        printf("%d\n", cnt);
+    }
+
+
+    return 0;
+}
